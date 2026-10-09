@@ -1,0 +1,4 @@
+html, body { margin: 0; width: 1024px; height: 1024px; background: transparent; overflow: hidden; }
+.shadow { position: absolute; inset: 0; filter: drop-shadow(0 12px 18px rgba(0,0,0,.28)) drop-shadow(0 2px 3px rgba(0,0,0,.2)); }
+.body { position: absolute; inset: 0; }
+.abs { position: absolute; }

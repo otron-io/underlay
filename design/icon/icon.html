@@ -1,0 +1,26 @@
+<!doctype html><html><head><link rel="stylesheet" href="common.css"><style>
+.body { background: radial-gradient(120% 90% at 50% 100%, #2a1f4a 0%, #14152a 45%, #0b0c16 100%); }
+.stage { left:0; top:0; width:1024px; height:1024px; perspective: 2400px; }
+.plane { position:absolute; left:262px; width:500px; height:500px; border-radius:72px; transform: rotateX(58deg) rotateZ(-45deg); }
+/* The live wallpaper: soft color fields like the demo page, no hard center. */
+.p1 { top:430px;
+  background:
+    radial-gradient(60% 60% at 18% 22%, #2fe0c8 0%, rgba(47,224,200,0) 70%),
+    radial-gradient(65% 65% at 85% 30%, #7a5cff 0%, rgba(122,92,255,0) 70%),
+    radial-gradient(70% 70% at 25% 85%, #ff5f9e 0%, rgba(255,95,158,0) 70%),
+    radial-gradient(60% 60% at 85% 85%, #ffb347 0%, rgba(255,179,71,0) 70%),
+    #5a4bd6;
+  box-shadow: 0 0 110px 26px rgba(255,95,158,.42), 0 0 240px 70px rgba(122,92,255,.38), inset 0 0 0 3px rgba(255,255,255,.25); }
+/* Glass layers (the windows above the wallpaper). */
+.glass { background: linear-gradient(135deg, rgba(255,255,255,.20) 0%, rgba(255,255,255,.05) 55%, rgba(255,255,255,.10) 100%);
+         backdrop-filter: blur(16px) saturate(1.3); }
+.p2 { top:305px; border: 3px solid rgba(255,255,255,.42); box-shadow: 0 30px 60px rgba(0,0,0,.25); }
+.p3 { top:180px; border: 3px solid rgba(255,255,255,.26); box-shadow: 0 30px 60px rgba(0,0,0,.18); opacity:.9; }
+.sheen { left:100px; top:100px; width:824px; height:824px; background: linear-gradient(170deg, rgba(255,255,255,.14), rgba(255,255,255,0) 30%); }
+.rim { left:100px; top:100px; width:824px; height:824px; box-shadow: inset 0 2px 0 rgba(255,255,255,.12); }
+</style></head><body>
+<div class="shadow"><div class="body" data-squircle="100,100,824">
+  <div class="abs stage"><div class="plane p1"></div><div class="plane glass p2"></div><div class="plane glass p3"></div></div>
+  <div class="abs sheen"></div>
+</div></div>
+<script src="base.js"></script></body></html>

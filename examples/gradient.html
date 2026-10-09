@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Underlay — Gradient</title>
+<style>
+  /* Edit this file while Underlay is running: the wallpaper reloads on save. */
+  :root { --hue: 250; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: hsl(var(--hue) 50% 10%);
+  }
+
+  /* Soft radial gradients instead of filter: blur() keep GPU cost low. */
+  .blob {
+    position: absolute;
+    width: 90vmax;
+    height: 90vmax;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .a {
+    top: -45vmax; left: -25vmax;
+    background: radial-gradient(circle, hsl(var(--hue) 85% 58% / .9), transparent 62%);
+    animation: drift-a 41s ease-in-out infinite alternate;
+  }
+  .b {
+    top: -20vmax; right: -40vmax;
+    background: radial-gradient(circle, hsl(calc(var(--hue) + 60) 90% 62% / .8), transparent 62%);
+    animation: drift-b 53s ease-in-out infinite alternate;
+  }
+  .c {
+    bottom: -55vmax; left: 10vmax;
+    background: radial-gradient(circle, hsl(calc(var(--hue) - 50) 80% 55% / .75), transparent 62%);
+    animation: drift-c 47s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift-a { to { transform: translate(35vw, 25vh) scale(1.15); } }
+  @keyframes drift-b { to { transform: translate(-40vw, 30vh) scale(.9); } }
+  @keyframes drift-c { to { transform: translate(30vw, -35vh) scale(1.2); } }
+
+  .info {
+    position: absolute;
+    left: 6vw;
+    bottom: 9vh;
+    color: rgb(255 255 255 / .9);
+    font-family: -apple-system, "SF Pro Display", "Helvetica Neue", sans-serif;
+  }
+  .clock {
+    font-size: 11vmin;
+    font-weight: 200;
+    line-height: 1;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .meta {
+    margin-top: 1.4vmin;
+    font: 500 12px/1.5 ui-monospace, Menlo, monospace;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / .55);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="blob a"></div>
+  <div class="blob b"></div>
+  <div class="blob c"></div>
+
+  <div class="info">
+    <div class="clock" id="clock"></div>
+    <div class="meta" id="meta"></div>
+  </div>
+
+<script>
+  // Underlay appends ?screen=<index>&width=<w>&height=<h> to the URL.
+  const params = new URLSearchParams(location.search);
+  const screen = Number(params.get("screen") ?? 0);
+  const width = params.get("width") ?? innerWidth;
+  const height = params.get("height") ?? innerHeight;
+
+  // Give each display its own palette.
+  document.documentElement.style.setProperty("--hue", (250 + screen * 70) % 360);
+
+  document.getElementById("meta").textContent =
+    `Display ${screen + 1} · ${width}×${height} · edit examples/gradient.html`;
+
+  const clock = document.getElementById("clock");
+  const format = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-digit" });
+  function tick() {
+    clock.textContent = format.format(new Date());
+    setTimeout(tick, 1000 - (Date.now() % 1000));
+  }
+  tick();
+</script>
+</body>
+</html>
