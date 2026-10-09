@@ -1,10 +1,15 @@
-# Underlay
+<p align="center">
+  <img src="docs/icon.png" width="128" height="128" alt="Underlay icon">
+</p>
+
+<h1 align="center">Underlay</h1>
+
+<p align="center">Live HTML wallpapers for macOS.</p>
 
 Underlay is a tiny macOS menu bar app that turns any local HTML file or URL into a live desktop
 wallpaper on every connected display — and keeps the menu bar's tint in sync with it.
 
-![Underlay screenshot](docs/screenshot.png)
-<!-- TODO: add a screenshot / screen recording -->
+![Underlay showing the bundled gradient example, with its menu open](docs/screenshot.jpg)
 
 - Native Swift + AppKit + WKWebView, no dependencies, ~1 MB
 - One wallpaper window per display, extending under the menu bar and notch
