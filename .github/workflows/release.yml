@@ -1,0 +1,59 @@
+name: Release
+
+# Push a tag like v1.2.0 to build Underlay.app and publish a GitHub release.
+# Release notes come from the matching "## [1.2.0]" section of CHANGELOG.md.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build universal app
+        env:
+          UNIVERSAL: "1"
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          export VERSION="${GITHUB_REF_NAME#v}"
+          scripts/build-app.sh
+
+      - name: Package
+        id: package
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ZIP="Underlay-$VERSION.zip"
+          # ditto keeps the bundle's code signature and extended attributes intact.
+          ditto -c -k --keepParent build/Underlay.app "$ZIP"
+          shasum -a 256 "$ZIP" > "$ZIP.sha256"
+          lipo -archs build/Underlay.app/Contents/MacOS/Underlay
+          echo "zip=$ZIP" >> "$GITHUB_OUTPUT"
+
+      - name: Extract release notes
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk -v v="$VERSION" '
+            $0 ~ "^## \\[" v "\\]" { found = 1; next }
+            found && /^## \[/ { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::No CHANGELOG.md section for $VERSION"
+            exit 1
+          fi
+          cat notes.md
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            "${{ steps.package.outputs.zip }}" "${{ steps.package.outputs.zip }}.sha256" \
+            --title "Underlay ${GITHUB_REF_NAME#v}" \
+            --notes-file notes.md \
+            --verify-tag

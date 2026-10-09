@@ -22,6 +22,19 @@ wallpaper on every connected display — and keeps the menu bar's tint in sync w
 
 Requires macOS 13 Ventura or later.
 
+## Install
+
+1. Download `Underlay-<version>.zip` from the [latest release](https://github.com/otron-io/underlay/releases/latest).
+2. Unzip it and move `Underlay.app` to `/Applications`.
+3. Open it. Releases are ad-hoc signed rather than notarized by Apple, so the first launch is
+   blocked: open **System Settings → Privacy & Security**, scroll down and click **Open Anyway**.
+   Or clear the download quarantine from Terminal:
+   ```sh
+   xattr -dr com.apple.quarantine /Applications/Underlay.app
+   ```
+
+Prefer to build it yourself? See below — locally built apps aren't quarantined.
+
 ## Build
 
 ```sh
@@ -42,8 +55,18 @@ icon is a flat template version drawn in code (`Sources/Underlay/StatusIcon.swif
 
 For development, `swift run` works too; it finds `examples/gradient.html` in the checkout.
 
-Because the app is ad-hoc signed, Gatekeeper will complain if you download a build from
-somewhere else. Building locally avoids that; otherwise right-click → Open the first time.
+## Releasing
+
+1. Add a `## [x.y.z]` section to [`CHANGELOG.md`](CHANGELOG.md) and commit it.
+2. Tag and push:
+   ```sh
+   git tag vx.y.z
+   git push origin vx.y.z
+   ```
+
+The [Release workflow](.github/workflows/release.yml) builds a universal (arm64 + x86_64) app
+stamped with that version, zips it, and publishes a GitHub release with the changelog section
+as notes and a SHA-256 checksum alongside.
 
 ## Usage
 

@@ -10,7 +10,9 @@ cd "$ROOT"
 
 APP_NAME="Underlay"
 BUNDLE_ID="dev.underlay.Underlay"
-VERSION="${VERSION:-0.1.0}"
+# Defaults to the latest git tag (v1.2.3 → 1.2.3); CI passes VERSION explicitly.
+VERSION="${VERSION:-$( (git -C "$ROOT" describe --tags --abbrev=0 2>/dev/null || true) | sed 's/^v//')}"
+VERSION="${VERSION:-0.0.0}"
 BUILD_NUMBER="${BUILD_NUMBER:-1}"
 APP="$ROOT/build/$APP_NAME.app"
 
